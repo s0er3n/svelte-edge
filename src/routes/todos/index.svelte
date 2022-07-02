@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { browser } from '$app/env';
+
 	type Todo = {
 		uid: string;
 		created_at: Date;
@@ -10,6 +12,14 @@
 	export let todos: Todo[];
 
 	console.log('todos?', todos);
+	const performance = () => {
+		if (browser) {
+			const currentTime = new Date();
+			// round trip time
+			const fullTime = currentTime - window.performance.timing.requestStart;
+			return fullTime;
+		}
+	};
 </script>
 
 <svelte:head>
@@ -18,20 +28,11 @@
 </svelte:head>
 
 <div>
-	<h1>Look in console because Svelte eats my numbers 😭</h1>
 	<div>
 		<h2>
-			Request-to-paint time: <span id="p-full-time" />
+			Request-to-paint time: {performance()}
 			ms
 		</h2>
 		<a href="/">Back</a>
-		<script>
-			const currentTime = new Date();
-
-			// round trip time
-			const fullTime = currentTime - window.performance.timing.requestStart;
-			document.getElementById('p-full-time').innerHTML = fullTime;
-			console.log('FULL TIME SINCE SVELTE EATS IT', fullTime);
-		</script>
 	</div>
 </div>
